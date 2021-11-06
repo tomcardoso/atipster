@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>ATIPster bookmarklet</title>
+    <style media="screen">
+      * {
+        box-sizing: border-box;
+      }
+      @-webkit-keyframes BackgroundGradient {
+          0% { background-position: 0% 50% }
+          50% { background-position: 100% 50% }
+          100% { background-position: 0% 50% }
+      }
+      @-moz-keyframes BackgroundGradient {
+          0% { background-position: 0% 50% }
+          50% { background-position: 100% 50% }
+          100% { background-position: 0% 50% }
+      }
+      @keyframes BackgroundGradient {
+          0% { background-position: 0% 50% }
+          50% { background-position: 100% 50% }
+          100% { background-position: 0% 50% }
+      }
+      body {
+        background: linear-gradient(270deg, #f4a261, #a0c4ff);
+        background-size: 400% 400%;
+        -webkit-animation: BackgroundGradient 20s ease infinite;
+        -moz-animation: BackgroundGradient 20s ease infinite;
+        animation: BackgroundGradient 20s ease infinite;
+      }
+      .content {
+        width: 700px;
+        margin: 2em auto;
+      }
+      h1, p {
+        margin: 0 auto;
+        font-family: Helvetica;
+        padding: 0;
+        margin-bottom: 1rem;
+      }
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+      }
+      h1 span {
+        border-bottom: 5px solid black;
+      }
+      p {
+        font-size: 1.3rem;
+        line-height: 1.4;
+        margin-bottom: 0.9rem;
+      }
+      a {
+        color: black;
+      }
+      .note {
+        font-size: 0.9em;
+      }
+      .form {
+        margin-top: 2em;
+        margin-bottom: 2em;
+      }
+      select, input, button {
+        height: 2.5rem;
+      }
+      select, input, textarea, button {
+        background: none;
+        padding: 0.3em 0.4em;
+        border-radius: 5px;
+        border: 2px solid black;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 1.3rem;
+        width: 100%;
+      }
+      select:focus, input:focus, textarea:focus {
+        outline: none;
+        border-color: black;
+      }
+      textarea {
+        resize: none;
+      }
+      label {
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 12px;
+        font-family: Helvetica;
+        font-weight: bold;
+      }
+      button {
+        padding-top: 5px;
+      }
+      button:hover {
+        cursor: pointer;
+        background-color: black;
+        color: white;
+      }
+      .form-row {
+        display: flex;
+        margin-bottom: 1em;
+        justify-content: space-between;
+      }
+      .form-row-25 {
+        width: calc(25% - (1em / 4));
+      }
+      .form-row-75 {
+        width: calc(75% - (1em / 4));
+      }
+      .form-row-third {
+        width: calc((100% / 3) - (1em / 3));
+      }
+      .form-row-half {
+        width: calc((100% / 2) - (1em / 4));
+      }
+      .form-row-full {
+        width: 100%;
+      }
+      input::placeholder, textarea::placeholder {
+        opacity: 0.3;
+      }
+      .bookmarklet-text {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      .bookmarklet-container {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 0.8rem;
+        opacity: 0.2;
+        pointer-events: none;
+      }
+      .bookmarklet-container.active {
+        opacity: 1;
+        pointer-events: all;
+        border-width: 4px;
+      }
+      #bookmarklet {
+        padding: 0.3em 1em;
+        border-radius: 6px;
+        font-weight: bold;
+        text-decoration: none;
+        background: #969696;
+        color: black;
+        display: inline-block;
+        text-align: center;
+      }
+      .bookmarklet-container.active #bookmarklet {
+        border: none;
+        background: linear-gradient(270deg, #FFEE88, #00CC99);
+        background-size: 400% 400%;
+        -webkit-animation: BackgroundGradient 20s ease infinite;
+        -moz-animation: BackgroundGradient 20s ease infinite;
+        animation: BackgroundGradient 20s ease infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <h1><span>ATIPster bookmarklet</span></h1>
+      <p>Filling out the Canadian government’s Access to Information and Privacy requests (ATIP) contact form sucks (be it through the <a href="https://atip-aiprp.apps.gc.ca/atip/welcome.do?lang=en">old portal</a> or the <a href="https://atip-aiprp.tbs-sct.gc.ca/en/Home/Welcome">new one</a>), especially if you need to file several requests. This bookmarklet makes the process slightly easier by pre-filling out all those fields.</p>
+      <p>Fill out the form below, drag the button into your bookmarks bar and you&rsquo;re good to go. The personal information you plug in below won&rsquo;t be sent anywhere and will never leave your browser. This bookmarklet will only work in latest versions of desktop Chrome and Firefox.</p>
+      <p class="note">Note: This form assumes you live in Canada and are requesting the records on your own behalf.</p>
+
+      <p class="bookmarklet-container">
+        <span class="bookmarklet-text">Drag this button into your bookmarks bar →</span>
+        <a id="bookmarklet" href="">ATIPster</a>
+      </p>
+
+      <form class="form">
+
+        <div class="form-row">
+          <div class="form-row-third">
+            <label for="form-req-status">Requestor status</label>
+            <select id="form-req-status" class="Requestor status" name="Requestor status" required>
+              <option value="Canadian citizen">Canadian citizen</option>
+              <option value="Permanent resident of Canada">Permanent resident of Canada</option>
+              <option value="Individual/corporation currently present in Canada">Individual/corporation currently present in Canada</option>
+            </select>
+          </div>
+          <div class="form-row-third">
+            <label for="form-requestor">Requestor category</label>
+            <select id="form-requestor" class="requestor" name="Requestor category" required>
+              <option value="Academia">Academia</option>
+              <option value="Business (private sector)">Business (private sector)</option>
+              <option value="Media" selected>Media</option>
+              <option value="Organization">Organization</option> <!--  AKA non-government institution in the TBS version -->
+              <option value="Member of the Public">Member of the public</option>
+              <option value="Decline to Identify">Decline to identify</option>
+            </select>
+          </div>
+          <div class="form-row-third">
+            <label for="form-delivery">Preferred delivery method</label>
+            <select id="form-delivery" class="delivery-method" name="Delivery method" required>
+              <option value="electronic copy">Electronic copy</option>
+              <option value="paper copy">Paper copy</option>
+              <option value="examine in person">Examine in person</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-row-half">
+            <label for="form-first-name">First name</label>
+            <input id="form-first-name" type="text" name="First name" value="" placeholder="First name" required>
+          </div>
+          <div class="form-row-half">
+            <label for="form-last-name">Last name</label>
+            <input id="form-last-name" type="text" name="Last name" value="" placeholder="Last name" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-row-third">
+            <label for="form-street-number">Street number</label>
+            <input id="form-street-number" type="text" name="Street number" value="" placeholder="Street number" required>
+          </div>
+          <div class="form-row-third">
+            <label for="form-street-name">Street name</label>
+            <input id="form-street-name" type="text" name="Street name" value="" placeholder="Street name" required>
+          </div>
+          <div class="form-row-third">
+            <label for="form-apt-number">Apt.\Suite\Unit #</label>
+            <input id="form-apt-number" type="text" name="Apt.\Suite\Unit #" value="" placeholder="Apt.\Suite\Unit #">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-row-75">
+            <label for="form-bus-name">Name of business or organization (if applicable)</label>
+            <input id="form-bus-name" type="text" name="Name of business or organization (if applicable)" value="" placeholder="Name of business or organization (if applicable)">
+          </div>
+          <div class="form-row-25">
+            <label for="form-po-box">Post office box</label>
+            <input id="form-po-box" type="text" name="Post office box" value="" placeholder="Post office box">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-row-third">
+            <label for="form-city">City or town</label>
+            <input id="form-city" type="text" name="City or town" value="" placeholder="City or town" required>
+          </div>
+          <div class="form-row-third">
+            <label for="form-province">Province</label>
+            <select id="form-province" class="province" name="Province">
+              <option value="Alberta">Alberta</option>
+              <option value="British Columbia">British Columbia</option>
+              <option value="Manitoba">Manitoba</option>
+              <option value="New Brunswick">New Brunswick</option>
+              <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+              <option value="Northwest Territories">Northwest Territories</option>
+              <option value="Nova Scotia">Nova Scotia</option>
+              <option value="Nunavut">Nunavut</option>
+              <option value="Ontario" selected>Ontario</option>
+              <option value="Prince Edward Island">Prince Edward Island</option>
+              <option value="Quebec">Quebec</option>
+              <option value="Saskatchewan">Saskatchewan</option>
+              <option value="Yukon">Yukon Territory</option>
+            </select>
+          </div>
+          <div class="form-row-third">
+            <label for="form-postal">Postal code (e.g. A1A 1A1)</label>
+            <input id="form-postal" pattern="[A-Z][0-9][A-Z] [0-9][A-Z][0-9]" type="text" name="Postal code" value="" placeholder="A1A 1A1" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-row-third">
+            <label for="form-email">E-mail address</label>
+            <input id="form-email" type="email" name="E-mail address" value="" placeholder="email@example.com" required>
+          </div>
+          <div class="form-row-third">
+            <label for="form-tel">Phone (e.g. 416-123-4567)</label>
+            <input id="form-tel" pattern="[0-9-]+" type="tel" name="Phone number" value="" placeholder="416-123-4567" required>
+          </div>
+          <div class="form-row-third">
+            <label for="form-fax">Fax (e.g. 416-123-4567)</label>
+            <input id="form-fax" pattern="[0-9-]+" type="fax" name="Fax number" value="" placeholder="416-123-4567">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit">Generate bookmarklet</button>
+        </div>
+
+      </form>
+
+    </div>
+
+    <script type="text/javascript">
+      (function() {
+        function constructData(d) {
+          return {
+            reqStatus: d['form-req-status'].value || '',
+            requestor: d['form-requestor'].value || '',
+            delivery: d['form-delivery'].value || '',
+            firstName: d['form-first-name'].value || '',
+            lastName: d['form-last-name'].value || '',
+            streetNumber: d['form-street-number'].value || '',
+            streetName: d['form-street-name'].value || '',
+            aptNumber: d['form-apt-number'].value || '',
+            busName: d['form-bus-name'].value || '',
+            poBox: d['form-po-box'].value || '',
+            city: d['form-city'].value || '',
+            province: d['form-province'].value || '',
+            postal: d['form-postal'].value || '',
+            email: d['form-email'].value || '',
+            tel: d['form-tel'].value || '',
+            fax: d['form-fax'].value || ''
+          };
+        };
+        const form = document.querySelector('form');
+        form.addEventListener('submit', event => {
+          event.preventDefault();
+          const data = constructData(event.currentTarget.elements);
+
+          const bakedData = `window.atipsterData = { reqStatus: '${data.reqStatus}', requestor: '${data.requestor}', delivery: '${data.delivery}', firstName: '${data.firstName}', lastName: '${data.lastName}', streetNumber: '${data.streetNumber}', streetName: '${data.streetName}', aptNumber: '${data.aptNumber}', busName: '${data.busName}', poBox: '${data.poBox}', city: '${data.city}', province: '${data.province}', postal: '${data.postal}', email: '${data.email}', tel: '${data.tel}', fax: '${data.fax}' };`;
+
+          // Don't forget to run bookmarklet.js through
+          // https://chriszarate.github.io/bookmarkleter/ before pasting below
+          const bookmarkletCode = `javascript:void%20function(){(function(){'replaceme';function%20a(a,b){const%20c=document.querySelectorAll(a+%22%20.radio%20input%22);c[{Academia:1,%22Business%20(private%20sector)%22:2,Media:3,Organization:4,%22Member%20of%20the%20Public%22:0,%22Decline%20to%20Identify%22:5}[b]].checked=!0}if(![%22atip-aiprp.tbs-sct.gc.ca%22,%22atip-aiprp.apps.gc.ca%22,%22localhost:8000%22].includes(window.location.host))return%20void%20alert(%22ATIPster%20error:%20This%20does%20not%20seem%20to%20be%20an%20ATIP%20requests%20page!%22);let%20b;if(%22atip-aiprp.tbs-sct.gc.ca%22==window.location.host%26%26(b=%22tbs%22),%22atip-aiprp.apps.gc.ca%22==window.location.host%26%26(b=%22ircc%22),%22localhost:8000%22==window.location.host%26%26(%22Provide%20contact%20information%20-%20Access%20to%20Information%20and%20Personal%20Information%20Request%20Service%20-%20Canada.ca%22==document.title%26%26(b=%22tbs%22),%22Access%20to%20Information%20and%20Privacy%20(ATIP)%20Online%20Request%22==document.title%26%26(b=%22ircc%22)),!b)return;const%20c=window.atipsterData;if(!c)return;const%20d=[{key:%22input%23LastName%22,value:c.lastName},{key:%22input%23FirstName%22,value:c.firstName},{key:%22input%23BusinessOrgName%22,value:c.busName},{key:%22input%23Address%22,value:c.streetNumber+%22%20%22+c.streetName},{key:%22input%23ApartmentSuiteUnitNumber%22,value:c.aptNumber},{key:%22input%23PostOfficeBox%22,value:c.poBox},{key:%22select%23SelectedCountryId%22,value:%22Canada%22},{key:%22select%23SelectedProvinceId%22,value:c.province},{key:%22input%23City%22,value:c.city},{key:%22input%23PostalCode%22,value:c.postal.replaceAll(%22%20%22,%22%22)},{key:%22input%23PhoneNumberCanUs%22,value:c.tel},{key:%22input%23FaxNumberCanUs%22,value:c.fax},{key:%22fieldset.chkbxrdio-grp%22,value:c.requestor}],e=[{key:%22select%23citizenshipCategory%22,value:c.reqStatus},{key:%22input%23familyName%22,value:c.lastName},{key:%22input%23givenName%22,value:c.firstName},{key:%22input%23address.streetNumber%22,value:c.streetNumber},{key:%22input%23address.streetAddress1%22,value:c.streetName},{key:%22input%23address.streetAddress2%22,value:c.busName},{key:%22input%23address.apartmentNumber%22,value:c.aptNumber},{key:%22input%23address.postOfficeBox%22,value:c.poBox},{key:%22input%23address.city%22,value:c.city},{key:%22select%23address.countryCode%22,value:%22Canada%22},{key:%22input%23address.provinceOrState%22,value:c.province},{key:%22input%23address.postalZipCode%22,value:c.postal},{key:%22input%23telephone%22,value:c.tel},{key:%22input%23fax%22,value:c.fax},{key:%22input%23email%22,value:c.email},{key:%22input%23confirmEmail%22,value:c.email},{key:%22select%23ownBehalf%22,value:%22Yes%22},{key:%22select%23descriptionCategory%22,value:c.requestor},{key:%22select%23receiveMethod%22,value:c.delivery}],f=%22ircc%22===b%3Fe:d;f.map(b=%3E{const{key:c,value:d}=b,e=c.replace(/%23.+/,%22%22),f=c.replace(/^.+%23/,%22%22),g=document.getElementById(f);switch(e){case%22input%22:g.value=d;break;case%22select%22:const%20b=Array.from(g.options).map(a=%3Ea.text);g.value=g.options[b.indexOf(d)].value;break;case%22fieldset.chkbxrdio-grp%22:a(e,d);}});const%20g=%22ircc%22==b%3F%22%23btnContinueBottom%22:%22%23contact-information-form%20%3E%20nav%20%3E%20button%22,h=document.querySelector(g);h.scrollIntoView%26%26h.scrollIntoView({behavior:%22smooth%22})})()}();`;
+
+          const bookmarklet = document.querySelector('#bookmarklet');
+          bookmarklet.href = bookmarkletCode.replace("'replaceme'", bakedData);
+
+          document.querySelector('.bookmarklet-container').classList.add('active');
+
+          form.style.opacity = 0.2;
+          form.style.pointerEvents = 'none';
+
+          // scroll back to top
+          if (document.documentElement.scrollIntoView) {
+            document.documentElement.scrollIntoView({ behavior: 'smooth' });
+          }
+
+        });
+      })();
+    </script>
+  </body>
+</html>
