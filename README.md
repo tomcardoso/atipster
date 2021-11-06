@@ -1,7 +1,7 @@
 # ATIPster
 
-![Unnamed study of a white horse and tipcart by Camille Pissarro, c. 1862. Photograph by Hans Weevers](https://www.impressionism.nl/wp-content/uploads/2020/05/SdR1863-469-Etude-1862-CCP59-white-horse-and-tipcart-24x33-private-iR2R116.jpg)
-_Unnamed study of a white horse and tipcart by Camille Pissarro, c. 1862. Photograph by [Hans Weevers](https://www.impressionism.nl/pissarro-at-the-salon/)._
+![Mahoning, 1956, Franz Kline](https://whitneymedia.org/assets/image/688331/large_57_10_klinef_resized.jpg)
+_Mahoning, 1956, Franz Kline._
 
 Every time you want to file a freedom of information request to the Canadian federal government (through either the [old portal](https://atip-aiprp.apps.gc.ca/atip/welcome.do?lang=en) or the [new one](https://atip-aiprp.tbs-sct.gc.ca/en/Home/Welcome)), you must manually fill out an annoying form with your contact information (the form doesn’t work well with browsers’ autofill). This bookmarklet makes the process easier by pre-filling out all the fields.
 
