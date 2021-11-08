@@ -13,19 +13,19 @@
   // Set up pageType
   let pageType;
 
-  if (window.location.host == 'atip-aiprp.tbs-sct.gc.ca') {
+  if (window.location.host === 'atip-aiprp.tbs-sct.gc.ca') {
     pageType = 'tbs';
   }
 
-  if (window.location.host == 'atip-aiprp.apps.gc.ca') {
+  if (window.location.host === 'atip-aiprp.apps.gc.ca') {
     pageType = 'ircc';
   }
 
-  if (window.location.host == 'localhost:8000') {
-    if (document.title == 'Provide contact information - Access to Information and Personal Information Request Service - Canada.ca') {
+  if (window.location.host === 'localhost:8000') {
+    if (document.title === 'Provide contact information - Access to Information and Personal Information Request Service - Canada.ca') {
       pageType = 'tbs';
     }
-    if (document.title == 'Access to Information and Privacy (ATIP) Online Request') {
+    if (document.title === 'Access to Information and Privacy (ATIP) Online Request') {
       pageType = 'ircc';
     }
   }
@@ -93,6 +93,20 @@
     checkboxes[fieldOptions[value]].checked = true;
   }
 
+  function setSelect(element, value) {
+    let valueToAssign = value;
+
+    if (pageType === 'ircc') {
+      const selectedDept = document.getElementById('department').selectedOptions[0].text;
+      if (selectedDept === 'Immigration, Refugees and Citizenship Canada' && element.id === 'receiveMethod') {
+        valueToAssign = 'E-mail';
+      }
+    }
+
+    const optionsText = Array.from(element.options).map(d => d.text);
+    element.value = element.options[optionsText.indexOf(valueToAssign)].value;
+  }
+
   // Map over the fields and write to them
   formFields.map(entry => {
     const { key, value } = entry;
@@ -106,8 +120,7 @@
         element.value = value;
         break;
       case 'select':
-        const optionsText = Array.from(element.options).map(d => d.text);
-        element.value = element.options[optionsText.indexOf(value)].value;
+        setSelect(element, value);
         break;
       case 'fieldset.chkbxrdio-grp':
         setFieldset(fieldType, value);
@@ -115,7 +128,7 @@
     }
   });
 
-  const nextBtnSelector = pageType == 'ircc' ? '#btnContinueBottom' : '#contact-information-form > nav > button',
+  const nextBtnSelector = pageType === 'ircc' ? '#btnContinueBottom' : '#contact-information-form > nav > button',
     nextBtn = document.querySelector(nextBtnSelector);
 
   // Scroll to next page button

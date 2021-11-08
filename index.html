@@ -23,7 +23,7 @@
           100% { background-position: 0% 50% }
       }
       body {
-        background: linear-gradient(270deg, #f4a261, #a0c4ff);
+        background: linear-gradient(270deg, #FF8243, #FFD07F);
         background-size: 400% 400%;
         -webkit-animation: BackgroundGradient 20s ease infinite;
         -moz-animation: BackgroundGradient 20s ease infinite;
@@ -31,7 +31,7 @@
       }
       .content {
         width: 700px;
-        margin: 2em auto;
+        margin: 2em auto 0 auto;
       }
       h1, p {
         margin: 0 auto;
@@ -136,7 +136,7 @@
         border-width: 4px;
       }
       #bookmarklet {
-        padding: 0.3em 1em;
+        padding: 0.3em 0.5em;
         border-radius: 6px;
         font-weight: bold;
         text-decoration: none;
@@ -153,14 +153,22 @@
         -moz-animation: BackgroundGradient 20s ease infinite;
         animation: BackgroundGradient 20s ease infinite;
       }
+      .footer {
+        margin-top: 3em;
+        border-top: 1px solid black;
+      }
+      .footer p {
+        margin-top: 5px;
+        font-size: 0.8em;
+      }
     </style>
   </head>
   <body>
     <div class="content">
       <h1><span>ATIPster bookmarklet</span></h1>
-      <p>Filling out the Canadian government’s Access to Information and Privacy requests (ATIP) contact form sucks (be it through the <a href="https://atip-aiprp.apps.gc.ca/atip/welcome.do?lang=en">old portal</a> or the <a href="https://atip-aiprp.tbs-sct.gc.ca/en/Home/Welcome">new one</a>), especially if you need to file several requests. This bookmarklet makes the process slightly easier by pre-filling out all those fields.</p>
+      <p>Filling out the Canadian government’s Access to Information and Privacy request (ATIP) contact form sucks (be it through the <a href="https://atip-aiprp.apps.gc.ca/atip/welcome.do?lang=en">old portal</a> or the <a href="https://atip-aiprp.tbs-sct.gc.ca/en/Home/Welcome">new one</a>), especially if you’re filing several requests. This bookmarklet makes the process slightly easier by pre-filling out all those fields.</p>
       <p>Fill out the form below, drag the button into your bookmarks bar and you&rsquo;re good to go. The personal information you plug in below won&rsquo;t be sent anywhere and will never leave your browser. This bookmarklet will only work in latest versions of desktop Chrome and Firefox.</p>
-      <p class="note">Note: This form assumes you live in Canada and are requesting the records on your own behalf.</p>
+      <p class="note">Note: This form assumes you live in Canada and are requesting the records on your own behalf. If you are requesting records from IRCC using the old portal, the tool will set your preferred delivery method to e-mail.</p>
 
       <p class="bookmarklet-container">
         <span class="bookmarklet-text">Drag this button into your bookmarks bar →</span>
@@ -272,11 +280,11 @@
           </div>
           <div class="form-row-third">
             <label for="form-tel">Phone (e.g. 416-123-4567)</label>
-            <input id="form-tel" pattern="[0-9-]+" type="tel" name="Phone number" value="" placeholder="416-123-4567" required>
+            <input id="form-tel" pattern="[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" type="tel" name="Phone number" value="" placeholder="416-123-4567" required>
           </div>
           <div class="form-row-third">
             <label for="form-fax">Fax (e.g. 416-123-4567)</label>
-            <input id="form-fax" pattern="[0-9-]+" type="fax" name="Fax number" value="" placeholder="416-123-4567">
+            <input id="form-fax" pattern="[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" type="tel" name="Fax number" value="" placeholder="416-123-4567">
           </div>
         </div>
 
@@ -286,10 +294,30 @@
 
       </form>
 
+      <div class="footer">
+        <p>Made in 2021 by <a href="https://twitter.com/tom_cardoso">Tom Cardoso</a> and open-sourced under the MIT licence. <a href="https://www.github.com/tomcardoso/atipster">See code on GitHub.</a></p>
+      </div>
+
     </div>
 
     <script type="text/javascript">
       (function() {
+        const customValidationMessages = function(element) {
+          const telValidationText = 'Needs a phone number in the format 416-123-4567, with dashes!',
+            postalValidationText = 'Needs a Canadian postal code in the format A1A 1A1, with spaces!';
+          element.addEventListener('input', event => {
+            if (element.validity.patternMismatch) {
+              element.setCustomValidity(element.type === 'tel' ? telValidationText : postalValidationText);
+            } else {
+              element.setCustomValidity('');
+            }
+          });
+        };
+
+        ['form-postal', 'form-tel', 'form-fax'].map(d => {
+          customValidationMessages(document.getElementById(d));
+        });
+
         function constructData(d) {
           return {
             reqStatus: d['form-req-status'].value || '',
@@ -310,8 +338,11 @@
             fax: d['form-fax'].value || ''
           };
         };
+
         const form = document.querySelector('form');
+
         form.addEventListener('submit', event => {
+
           event.preventDefault();
           const data = constructData(event.currentTarget.elements);
 
@@ -319,7 +350,7 @@
 
           // Don't forget to run bookmarklet.js through
           // https://chriszarate.github.io/bookmarkleter/ before pasting below
-          const bookmarkletCode = `javascript:void%20function(){(function(){'replaceme';function%20a(a,b){const%20c=document.querySelectorAll(a+%22%20.radio%20input%22);c[{Academia:1,%22Business%20(private%20sector)%22:2,Media:3,Organization:4,%22Member%20of%20the%20Public%22:0,%22Decline%20to%20Identify%22:5}[b]].checked=!0}if(![%22atip-aiprp.tbs-sct.gc.ca%22,%22atip-aiprp.apps.gc.ca%22,%22localhost:8000%22].includes(window.location.host))return%20void%20alert(%22ATIPster%20error:%20This%20does%20not%20seem%20to%20be%20an%20ATIP%20requests%20page!%22);let%20b;if(%22atip-aiprp.tbs-sct.gc.ca%22==window.location.host%26%26(b=%22tbs%22),%22atip-aiprp.apps.gc.ca%22==window.location.host%26%26(b=%22ircc%22),%22localhost:8000%22==window.location.host%26%26(%22Provide%20contact%20information%20-%20Access%20to%20Information%20and%20Personal%20Information%20Request%20Service%20-%20Canada.ca%22==document.title%26%26(b=%22tbs%22),%22Access%20to%20Information%20and%20Privacy%20(ATIP)%20Online%20Request%22==document.title%26%26(b=%22ircc%22)),!b)return;const%20c=window.atipsterData;if(!c)return;const%20d=[{key:%22input%23LastName%22,value:c.lastName},{key:%22input%23FirstName%22,value:c.firstName},{key:%22input%23BusinessOrgName%22,value:c.busName},{key:%22input%23Address%22,value:c.streetNumber+%22%20%22+c.streetName},{key:%22input%23ApartmentSuiteUnitNumber%22,value:c.aptNumber},{key:%22input%23PostOfficeBox%22,value:c.poBox},{key:%22select%23SelectedCountryId%22,value:%22Canada%22},{key:%22select%23SelectedProvinceId%22,value:c.province},{key:%22input%23City%22,value:c.city},{key:%22input%23PostalCode%22,value:c.postal.replaceAll(%22%20%22,%22%22)},{key:%22input%23PhoneNumberCanUs%22,value:c.tel},{key:%22input%23FaxNumberCanUs%22,value:c.fax},{key:%22fieldset.chkbxrdio-grp%22,value:c.requestor}],e=[{key:%22select%23citizenshipCategory%22,value:c.reqStatus},{key:%22input%23familyName%22,value:c.lastName},{key:%22input%23givenName%22,value:c.firstName},{key:%22input%23address.streetNumber%22,value:c.streetNumber},{key:%22input%23address.streetAddress1%22,value:c.streetName},{key:%22input%23address.streetAddress2%22,value:c.busName},{key:%22input%23address.apartmentNumber%22,value:c.aptNumber},{key:%22input%23address.postOfficeBox%22,value:c.poBox},{key:%22input%23address.city%22,value:c.city},{key:%22select%23address.countryCode%22,value:%22Canada%22},{key:%22input%23address.provinceOrState%22,value:c.province},{key:%22input%23address.postalZipCode%22,value:c.postal},{key:%22input%23telephone%22,value:c.tel},{key:%22input%23fax%22,value:c.fax},{key:%22input%23email%22,value:c.email},{key:%22input%23confirmEmail%22,value:c.email},{key:%22select%23ownBehalf%22,value:%22Yes%22},{key:%22select%23descriptionCategory%22,value:c.requestor},{key:%22select%23receiveMethod%22,value:c.delivery}],f=%22ircc%22===b%3Fe:d;f.map(b=%3E{const{key:c,value:d}=b,e=c.replace(/%23.+/,%22%22),f=c.replace(/^.+%23/,%22%22),g=document.getElementById(f);switch(e){case%22input%22:g.value=d;break;case%22select%22:const%20b=Array.from(g.options).map(a=%3Ea.text);g.value=g.options[b.indexOf(d)].value;break;case%22fieldset.chkbxrdio-grp%22:a(e,d);}});const%20g=%22ircc%22==b%3F%22%23btnContinueBottom%22:%22%23contact-information-form%20%3E%20nav%20%3E%20button%22,h=document.querySelector(g);h.scrollIntoView%26%26h.scrollIntoView({behavior:%22smooth%22})})()}();`;
+          const bookmarkletCode = `javascript:void%20function(){(function(){'replaceme';function%20a(a,b){const%20c=document.querySelectorAll(a+%22%20.radio%20input%22);c[{Academia:1,%22Business%20(private%20sector)%22:2,Media:3,Organization:4,%22Member%20of%20the%20Public%22:0,%22Decline%20to%20Identify%22:5}[b]].checked=!0}function%20b(a,b){let%20d=b;if(%22ircc%22===c){const%20b=document.getElementById(%22department%22).selectedOptions[0].text;%22Immigration,%20Refugees%20and%20Citizenship%20Canada%22===b%26%26%22receiveMethod%22===a.id%26%26(d=%22E-mail%22)}const%20e=Array.from(a.options).map(a=%3Ea.text);a.value=a.options[e.indexOf(d)].value}if(![%22atip-aiprp.tbs-sct.gc.ca%22,%22atip-aiprp.apps.gc.ca%22,%22localhost:8000%22].includes(window.location.host))return%20void%20alert(%22ATIPster%20error:%20This%20does%20not%20seem%20to%20be%20an%20ATIP%20requests%20page!%22);let%20c;if(%22atip-aiprp.tbs-sct.gc.ca%22===window.location.host%26%26(c=%22tbs%22),%22atip-aiprp.apps.gc.ca%22===window.location.host%26%26(c=%22ircc%22),%22localhost:8000%22===window.location.host%26%26(%22Provide%20contact%20information%20-%20Access%20to%20Information%20and%20Personal%20Information%20Request%20Service%20-%20Canada.ca%22===document.title%26%26(c=%22tbs%22),%22Access%20to%20Information%20and%20Privacy%20(ATIP)%20Online%20Request%22===document.title%26%26(c=%22ircc%22)),!c)return;const%20d=window.atipsterData;if(!d)return;const%20e=[{key:%22input%23LastName%22,value:d.lastName},{key:%22input%23FirstName%22,value:d.firstName},{key:%22input%23BusinessOrgName%22,value:d.busName},{key:%22input%23Address%22,value:d.streetNumber+%22%20%22+d.streetName},{key:%22input%23ApartmentSuiteUnitNumber%22,value:d.aptNumber},{key:%22input%23PostOfficeBox%22,value:d.poBox},{key:%22select%23SelectedCountryId%22,value:%22Canada%22},{key:%22select%23SelectedProvinceId%22,value:d.province},{key:%22input%23City%22,value:d.city},{key:%22input%23PostalCode%22,value:d.postal.replaceAll(%22%20%22,%22%22)},{key:%22input%23PhoneNumberCanUs%22,value:d.tel},{key:%22input%23FaxNumberCanUs%22,value:d.fax},{key:%22fieldset.chkbxrdio-grp%22,value:d.requestor}],f=[{key:%22select%23citizenshipCategory%22,value:d.reqStatus},{key:%22input%23familyName%22,value:d.lastName},{key:%22input%23givenName%22,value:d.firstName},{key:%22input%23address.streetNumber%22,value:d.streetNumber},{key:%22input%23address.streetAddress1%22,value:d.streetName},{key:%22input%23address.streetAddress2%22,value:d.busName},{key:%22input%23address.apartmentNumber%22,value:d.aptNumber},{key:%22input%23address.postOfficeBox%22,value:d.poBox},{key:%22input%23address.city%22,value:d.city},{key:%22select%23address.countryCode%22,value:%22Canada%22},{key:%22input%23address.provinceOrState%22,value:d.province},{key:%22input%23address.postalZipCode%22,value:d.postal},{key:%22input%23telephone%22,value:d.tel},{key:%22input%23fax%22,value:d.fax},{key:%22input%23email%22,value:d.email},{key:%22input%23confirmEmail%22,value:d.email},{key:%22select%23ownBehalf%22,value:%22Yes%22},{key:%22select%23descriptionCategory%22,value:d.requestor},{key:%22select%23receiveMethod%22,value:d.delivery}],g=%22ircc%22===c%3Ff:e;g.map(c=%3E{const{key:d,value:e}=c,f=d.replace(/%23.+/,%22%22),g=d.replace(/^.+%23/,%22%22),h=document.getElementById(g);%22input%22===f%3Fh.value=e:%22select%22===f%3Fb(h,e):%22fieldset.chkbxrdio-grp%22===f%3Fa(f,e):void%200});const%20h=%22ircc%22===c%3F%22%23btnContinueBottom%22:%22%23contact-information-form%20%3E%20nav%20%3E%20button%22,i=document.querySelector(h);i.scrollIntoView%26%26i.scrollIntoView({behavior:%22smooth%22})})()}();`;
 
           const bookmarklet = document.querySelector('#bookmarklet');
           bookmarklet.href = bookmarkletCode.replace("'replaceme'", bakedData);
