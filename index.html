@@ -350,7 +350,7 @@
 
           const bakedData = `window.atipsterData = { reqStatus: '${data.reqStatus}', requestor: '${data.requestor}', delivery: '${data.delivery}', firstName: '${data.firstName}', lastName: '${data.lastName}', streetNumber: '${data.streetNumber}', streetName: '${data.streetName}', aptNumber: '${data.aptNumber}', busName: '${data.busName}', poBox: '${data.poBox}', city: '${data.city}', province: '${data.province}', postal: '${data.postal}', email: '${data.email}', tel: '${data.tel}', fax: '${data.fax}' };`;
 
-          const bookmarkletCode = `javascript:javascript: (function() { window.atipsterData = 'replaceme'; var e = document.createElement('script'); e.setAttribute('src', 'https://tomcardoso.github.io/atipster/bookmarklet.js'); e.setAttribute('class', 'sedi-bookmarklet'); document.body.appendChild(e); })();`;
+          const bookmarkletCode = `javascript:javascript: (function() { 'replaceme'; var e = document.createElement('script'); e.setAttribute('src', 'https://tomcardoso.github.io/atipster/bookmarklet.js'); e.setAttribute('class', 'sedi-bookmarklet'); document.body.appendChild(e); })();`;
 
           const bookmarklet = document.querySelector('#bookmarklet');
           bookmarklet.href = bookmarkletCode.replace("'replaceme'", bakedData);
