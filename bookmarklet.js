@@ -103,8 +103,8 @@
       }
     }
 
-    const optionsText = Array.from(element.options).map(d => d.text);
-    element.value = element.options[optionsText.indexOf(valueToAssign)].value;
+    const optionsText = Array.from(element.options).map(d => d.text.toUpperCase());
+    element.value = element.options[optionsText.indexOf(valueToAssign.toUpperCase())].value;
   }
 
   // Map over the fields and write to them
