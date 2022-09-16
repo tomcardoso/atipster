@@ -37,6 +37,15 @@
 
   if (!atipsterData) return;
 
+  if (atipsterData.requestor === 'Individual/corporation currently present in Canada') {
+    if (pageType === 'tbs') atipsterData.requestor = 'Individual present in Canada';
+    if (pageType === 'ircc') atipsterData.requestor = 'Corporation present in Canada';
+  }
+
+  if (['Foreign National present in Canada', 'Foreign National outside of Canada'].indexOf(atipsterData.requestor) != -1) {
+    if (pageType === 'tbs') atipsterData.requestor = 'Individual present in Canada';
+  }
+
   // Field mappings. Can't use template literals here because of bookmarklet weirdness, hence string concatenation
   const tbsFormFields = [
     { key: 'input#LastName', value: atipsterData.lastName },
