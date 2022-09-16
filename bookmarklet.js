@@ -1,7 +1,5 @@
 (function() {
 
-  'replaceme';
-
   // Check we're on an ATIP request page, or in test mode
   const possiblePages = ['atip-aiprp.tbs-sct.gc.ca', 'atip-aiprp.apps.gc.ca', 'localhost:8000'];
 
@@ -46,12 +44,12 @@
     if (pageType === 'tbs') atipsterData.requestor = 'Individual present in Canada';
   }
 
-  // Field mappings. Can't use template literals here because of bookmarklet weirdness, hence string concatenation
+  // Field mappings
   const tbsFormFields = [
     { key: 'input#LastName', value: atipsterData.lastName },
     { key: 'input#FirstName', value: atipsterData.firstName },
     { key: 'input#BusinessOrgName', value: atipsterData.busName },
-    { key: 'input#Address', value: atipsterData.streetNumber + ' ' + atipsterData.streetName },
+    { key: 'input#Address', value: `${atipsterData.streetNumber} ${atipsterData.streetName}` },
     { key: 'input#ApartmentSuiteUnitNumber', value: atipsterData.aptNumber },
     { key: 'input#PostOfficeBox', value: atipsterData.poBox },
     { key: 'select#SelectedCountryId', value: 'Canada' }, // default
@@ -98,7 +96,7 @@
       'Decline to Identify': 5
     };
 
-    const checkboxes = document.querySelectorAll(fieldType + ' .radio input');
+    const checkboxes = document.querySelectorAll(`${fieldType} .radio input`);
     checkboxes[fieldOptions[value]].checked = true;
   }
 
